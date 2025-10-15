@@ -1,0 +1,19 @@
+# Dependencias
+/node_modules
+/backend/node_modules
+/frontend/node_modules
+
+# Archivos de Next.js
+/frontend/.next/
+/frontend/out/
+
+# Logs
+npm-debug.log*
+yarn-error.log*
+
+# Archivos de entorno
+.env
+.env.local
+
+# Archivos del sistema operativo
+.DS_Store

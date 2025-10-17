@@ -1,0 +1,45 @@
+/* La "caja" que contendrá todo el catálogo */
+.mainBox {
+  background-color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor para la barra de búsqueda y la paginación */
+.controlsContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Estilos para los botones de paginación */
+.paginationButton {
+  background-color: transparent;
+  color: #bf8a3d;
+  font-weight: bold;
+  border: 2px solid #bf8a3d;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover {
+  background-color: #bf8a3d;
+  color: white;
+}
+
+.paginationButton:disabled {
+  border-color: #cccccc;
+  color: #cccccc;
+  cursor: not-allowed;
+  background-color: transparent;
+}
+
+.pageNumber {
+  margin: 0 16px;
+  font-weight: 500;
+  color: #555;
+}

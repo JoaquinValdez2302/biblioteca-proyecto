@@ -1,0 +1,45 @@
+const pool = require('../config/database');
+
+
+// La función ahora acepta parámetros de búsqueda y paginación
+const obtenerTodos = async (busqueda = '', pagina = 1, porPagina = 10) => {
+  // Calculamos el OFFSET para la paginación
+  const offset = (pagina - 1) * porPagina;
+
+  // Construimos la consulta SQL dinámicamente
+  let consulta = 'SELECT * FROM Libro';
+    const valores = [];
+
+    if (busqueda) {
+    // Usamos ILIKE para búsquedas insensibles a mayúsculas/minúsculas
+    consulta += ' WHERE titulo ILIKE $1 OR autor ILIKE $1';
+    valores.push(`%${busqueda}%`);
+    }
+
+  // Agregamos la paginación a la consulta
+    consulta += ` LIMIT $${valores.length + 1} OFFSET $${valores.length + 2}`;
+    valores.push(porPagina, offset);
+
+    const resultado = await pool.query(consulta, valores);
+    return resultado.rows;
+};
+
+// ...el resto de tus funciones (obtenerPorId, actualizarEstado)...
+
+
+// --- NUEVAS FUNCIONES ---
+const obtenerPorId = async (id) => {
+    const resultado = await pool.query('SELECT * FROM Libro WHERE libro_id = $1', [id]);
+    return resultado.rows[0];
+};
+
+const actualizarEstado = async (id, estado) => {
+    await pool.query('UPDATE Libro SET estado = $1 WHERE libro_id = $2', [estado, id]);
+};
+// -------------------------
+
+module.exports = {
+    obtenerTodos,
+    obtenerPorId,     // Exportamos las nuevas funciones
+    actualizarEstado,
+};

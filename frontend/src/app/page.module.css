@@ -1,3 +1,7 @@
+.appBar {
+  background-color: #84b6f4 !important; /* Color principal */
+  color: #333 !important; /* Color de texto oscuro para buen contraste */
+}
 .page {
   --gray-rgb: 0, 0, 0;
   --gray-alpha-200: rgba(var(--gray-rgb), 0.08);

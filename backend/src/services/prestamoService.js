@@ -27,10 +27,19 @@ const realizarPrestamo = async (numeroDeSocio, libroId) => {
     return nuevoPrestamo;
 };
 
+const consultarVencenHoy = async () => {
+  return await prestamoRepository.obtenerVencenHoy();
+};
+
+const consultarUltimasDevoluciones = async () => {
+  return await prestamoRepository.obtenerUltimasDevoluciones();
+};
 const consultarPrestamosVigentes = async (soloAtrasados) => {
   return await prestamoRepository.obtenerVigentes(soloAtrasados);
 };
 module.exports = { 
   realizarPrestamo,
   consultarPrestamosVigentes,
+  consultarVencenHoy,
+  consultarUltimasDevoluciones,
 };

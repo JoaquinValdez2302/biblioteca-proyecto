@@ -1,0 +1,38 @@
+/* Estilo para la barra de navegación */
+.appBar {
+    background-color: #84b6f4 !important; /* Color principal */
+    color: #333 !important; /* Color de texto oscuro para buen contraste */
+}
+
+/* Contenedor del logo */
+.logoContainer {
+    position: relative; /* Necesario para que la imagen se posicione correctamente */
+    width: 150px;  /* Tamaño fijo para el logo */
+    height: 150px; /* Tamaño fijo para el logo */
+    border-radius: 50%; /* Esto hace que el contenedor sea redondo */
+    overflow: hidden; /* Oculta las esquinas de la imagen que se salen del círculo */
+    cursor: pointer;
+    margin: -40px;
+
+}
+
+/* Estilo para la imagen del logo */
+.logoImage {
+    object-fit: cover; /* Asegura que la imagen cubra el círculo sin deformarse */
+    
+}
+
+/* Nuevo contenedor para agrupar logo y texto */
+.logoWrapper {
+    display: flex;
+    align-items: center; /* Centra verticalmente el logo y el texto */
+    gap: 15px; /* Espacio entre el logo y el texto */
+}
+
+/* Estilo para el texto del logo */
+.logoWrapper .logoText {
+    font-family: "Georgia", serif; /* Cambiá a la fuente que prefieras */
+    font-weight: bold;
+    font-size: 1.5rem; /* Ajustá el tamaño como quieras */
+    color: #333;
+}

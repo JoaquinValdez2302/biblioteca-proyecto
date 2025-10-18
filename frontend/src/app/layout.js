@@ -1,16 +1,12 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'], // '400' para normal
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: "Create Next App",
@@ -20,7 +16,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ backgroundColor: '#d7c8b3' }} className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body style={{ backgroundColor: '#e6d6b8' }} className={instrumentSerif.className}>
         <Navbar /> {/* 2. Añadir el Navbar aquí */}
         {children}
       </body>

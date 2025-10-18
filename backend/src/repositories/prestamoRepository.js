@@ -32,7 +32,36 @@ const obtenerVigentes = async (soloAtrasados = false) => {
         return resultado.rows;
 };
 
+const obtenerVencenHoy = async () => {
+    const consulta = `
+    SELECT l.titulo, s.nombre_completo
+    FROM Prestamo p
+    JOIN Libro l ON p.libro_id = l.libro_id
+    JOIN Socio s ON p.socio_id = s.socio_id
+    WHERE p.fecha_devolucion IS NULL AND p.fecha_vencimiento::date = CURRENT_DATE
+  `;
+    const resultado = await pool.query(consulta);
+    return resultado.rows;
+};
+
+// Obtiene las últimas 5 devoluciones
+const obtenerUltimasDevoluciones = async () => {
+    const consulta = `
+    SELECT l.titulo, s.nombre_completo, p.fecha_devolucion
+    FROM Prestamo p
+    JOIN Libro l ON p.libro_id = l.libro_id
+    JOIN Socio s ON p.socio_id = s.socio_id
+    WHERE p.fecha_devolucion IS NOT NULL
+    ORDER BY p.fecha_devolucion DESC
+    LIMIT 5
+  `;
+    const resultado = await pool.query(consulta);
+    return resultado.rows;
+};
+
 module.exports = { 
     crear,
     obtenerVigentes,
+    obtenerVencenHoy,
+    obtenerUltimasDevoluciones,
 };

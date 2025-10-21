@@ -17,9 +17,9 @@
 /* Estilos para los botones de paginación */
 .paginationButton {
   background-color: transparent;
-  color: #bf8a3d;
+  color: black;
   font-weight: bold;
-  border: 2px solid #bf8a3d;
+  border: 2px solid #84b6f4;
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
@@ -27,7 +27,7 @@
 }
 
 .paginationButton:hover {
-  background-color: #bf8a3d;
+  background-color: #84b6f4;
   color: white;
 }
 
@@ -42,4 +42,29 @@
   margin: 0 16px;
   font-weight: 500;
   color: #555;
+}
+
+.tableRow:hover {
+  background-color: #f5f5f5 !important; /* Color sutil para el hover */
+  cursor: pointer;
+}
+
+/* Estilo para las filas pares (zebra striping) */
+.tableRowAlternate {
+  background-color: #faf8f5;
+}
+
+.tableHeader {
+  background-color: #f0ebe5; /* Un tono ligeramente más oscuro que el fondo */
+}
+
+/* Estilo para el texto principal de las celdas */
+.cellText {
+  color: #555;
+}
+
+/* Estilo específico para el título del libro */
+.titleText {
+  font-weight: 700; /* Negrita */
+  color: #333;
 }

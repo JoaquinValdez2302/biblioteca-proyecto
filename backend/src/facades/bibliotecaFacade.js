@@ -1,6 +1,9 @@
 const libroService = require('../services/libroService');
 const prestamoService = require('../services/prestamoService');
 const estadisticasService = require('../services/estadisticasService');
+const multaService = require('../services/multaService');
+const socioService = require('../services/socioService');
+
 
 // La fachada agrupa las operaciones de negocio
 const obtenerCatalogoDeLibros = (busqueda, pagina) => {
@@ -22,6 +25,29 @@ const obtenerPrestamosVencenHoy = () => {
 const obtenerUltimasDevoluciones = () => {
     return prestamoService.consultarUltimasDevoluciones();
 };
+
+const procesarDevolucion = (prestamoId, estaDañado, nivelDeDaño) => {
+    return prestamoService.procesarDevolucion(prestamoId, estaDañado, nivelDeDaño);
+};
+
+const consultarMultas = (filtroNombre, filtroEstado) => {
+    return multaService.consultarMultas(filtroNombre, filtroEstado);
+};
+
+const registrarPagoDeMulta = (multaId) => {
+    return multaService.registrarPagoDeMulta(multaId);
+};
+
+
+
+const registrarNuevoSocio = (nombreCompleto, dni, email, telefono) => {
+    return socioService.registrarNuevoSocio(nombreCompleto, dni, email, telefono);
+};
+
+const agregarNuevoLibro = (titulo, autor, isbn, precio) => {
+    return libroService.agregarNuevoLibro(titulo, autor, isbn, precio);
+};
+
 // Exportamos un objeto con todos los métodos de la fachada
 module.exports = {
     obtenerCatalogoDeLibros,
@@ -29,4 +55,9 @@ module.exports = {
     obtenerEstadisticasDashboard,
     obtenerPrestamosVencenHoy,
     obtenerUltimasDevoluciones,
+    procesarDevolucion,
+    consultarMultas,
+    registrarPagoDeMulta,
+    registrarNuevoSocio,
+    agregarNuevoLibro,
 };

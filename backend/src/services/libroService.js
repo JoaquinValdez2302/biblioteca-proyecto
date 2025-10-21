@@ -6,6 +6,12 @@ const obtenerTodosLosLibros = async (busqueda, pagina) => {
   return await libroRepository.obtenerTodos(busqueda, pagina);
 };
 
+const agregarNuevoLibro = async (titulo, autor, isbn, precio) => {
+  // Podrías validar aquí si el ISBN ya existe
+  return await libroRepository.crear(titulo, autor, isbn, precio);
+};
+
 module.exports = {
   obtenerTodosLosLibros,
+  agregarNuevoLibro,
 };

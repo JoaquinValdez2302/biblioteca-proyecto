@@ -38,9 +38,10 @@ for (let i = 0; i < 20; i++) {
       const titulo = faker.lorem.words(3).replace(/\b\w/g, l => l.toUpperCase()); // Título con mayúsculas
         const autor = faker.person.fullName();
         const isbn = faker.commerce.isbn();
+        const precio = faker.commerce.price({ min: 10, max: 100 });
         await client.query(
-        'INSERT INTO Libro (titulo, autor, isbn) VALUES ($1, $2, $3)',
-        [titulo, autor, isbn]
+        'INSERT INTO Libro (titulo, autor, isbn, precio) VALUES ($1, $2, $3, $4)',
+        [titulo, autor, isbn, precio]
         );
     }
 

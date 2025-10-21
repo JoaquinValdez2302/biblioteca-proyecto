@@ -8,38 +8,42 @@ const obtenerTodos = async (busqueda = '', pagina = 1, porPagina = 10) => {
 
   // Construimos la consulta SQL dinámicamente
   let consulta = 'SELECT * FROM Libro';
-    const valores = [];
+  const valores = [];
 
-    if (busqueda) {
+  if (busqueda) {
     // Usamos ILIKE para búsquedas insensibles a mayúsculas/minúsculas
     consulta += ' WHERE titulo ILIKE $1 OR autor ILIKE $1';
     valores.push(`%${busqueda}%`);
-    }
+  }
 
   // Agregamos la paginación a la consulta
-    consulta += ` LIMIT $${valores.length + 1} OFFSET $${valores.length + 2}`;
-    valores.push(porPagina, offset);
+  consulta += ` LIMIT $${valores.length + 1} OFFSET $${valores.length + 2}`;
+  valores.push(porPagina, offset);
 
-    const resultado = await pool.query(consulta, valores);
-    return resultado.rows;
+  const resultado = await pool.query(consulta, valores);
+  return resultado.rows;
 };
 
-// ...el resto de tus funciones (obtenerPorId, actualizarEstado)...
-
+const crear = async (titulo, autor, isbn, precio) => {
+  const consulta = 'INSERT INTO Libro (titulo, autor, isbn, precio) VALUES ($1, $2, $3, $4) RETURNING *';
+  const resultado = await pool.query(consulta, [titulo, autor, isbn, precio]);
+  return resultado.rows[0];
+};
 
 // --- NUEVAS FUNCIONES ---
 const obtenerPorId = async (id) => {
-    const resultado = await pool.query('SELECT * FROM Libro WHERE libro_id = $1', [id]);
-    return resultado.rows[0];
+  const resultado = await pool.query('SELECT * FROM Libro WHERE libro_id = $1', [id]);
+  return resultado.rows[0];
 };
 
 const actualizarEstado = async (id, estado) => {
-    await pool.query('UPDATE Libro SET estado = $1 WHERE libro_id = $2', [estado, id]);
+  await pool.query('UPDATE Libro SET estado = $1 WHERE libro_id = $2', [estado, id]);
 };
 // -------------------------
 
 module.exports = {
-    obtenerTodos,
-    obtenerPorId,     // Exportamos las nuevas funciones
-    actualizarEstado,
+  obtenerTodos,
+  obtenerPorId,     // Exportamos las nuevas funciones
+  actualizarEstado,
+  crear,
 };

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
-    Button, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert, Typography, Box,
+    Button, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar, Alert, Typography,
 } from '@mui/material';
 import styles from './CatalogoLibros.module.css';
 // ... tus importaciones existentes ...
@@ -122,7 +122,7 @@ const handleConfirmarPrestamo = async () => {
     </div>
     <TableContainer component={Paper} className={styles.catalogoContainer}>
         <Table>
-        <TableHead>
+        <TableHead className={styles.tableHeader}>
             <TableRow>
                 <TableCell className={styles.tableHeaderCell}><strong>Título</strong></TableCell>
                 <TableCell className={styles.tableHeaderCell}><strong>Autor</strong></TableCell>
@@ -131,30 +131,56 @@ const handleConfirmarPrestamo = async () => {
             </TableRow>
         </TableHead>
         <TableBody>
-            {libros.map((libro) => (
-            <TableRow key={libro.libro_id}>
-                <TableCell>{libro.titulo}</TableCell>
-                <TableCell>{libro.autor}</TableCell>
-                <TableCell>
-                <Chip
-                    label={libro.estado}
-                    color={libro.estado === 'disponible' ? 'success' : 'error'}
-                    size="small"
-                />
-                </TableCell>
-                <TableCell>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    disabled={libro.estado !== 'disponible'}
-                    onClick={() => handleAbrirModal(libro)}
-                >
-                    Prestar
-                </Button>
-                </TableCell>
-            </TableRow>
-            ))}
+            {Array.isArray(libros) && libros.map((libro, index) => (
+    <TableRow
+        key={libro.libro_id}
+        className={`${styles.tableRow} ${index % 2 !== 0 ? styles.tableRowAlternate : ''}`}
+    >
+      {/* 1. Estilo para el Título */}
+        <TableCell className={styles.titleText}>
+        {libro.titulo}
+        </TableCell>
+                
+      {/* 2. Estilo para el Autor */}
+        <TableCell className={styles.cellText}>
+        {libro.autor}
+        </TableCell>
+
+        <TableCell>
+        {/* 3. Estilo refinado para el Chip de Estado */}
+        <Chip
+            label={libro.estado}
+          // Para "disponible", usamos un estilo sutil; para "prestado", uno más fuerte
+            variant={libro.estado === 'disponible' ? 'outlined' : 'filled'}
+            color={libro.estado === 'disponible' ? 'success' : 'error'}
+            size="small"
+        />
+        </TableCell>
+
+        <TableCell>
+        {/* 4. Estilo personalizado para el Botón "Prestar" */}
+        <Button
+            variant="contained"
+            size="small"
+            disabled={libro.estado !== 'disponible'}
+            onClick={() => handleAbrirModal(libro)}
+            sx={{
+            backgroundColor: '#C19A6B', // Tu color secundario
+            color: 'white',
+            fontWeight: 'bold',
+            '&:hover': {
+              backgroundColor: '#a5752b', // Un tono más oscuro para el hover
+            },
+            '&:disabled': {
+                backgroundColor: '#cccccc',
+            }
+            }}
+        >
+            Prestar
+        </Button>
+        </TableCell>
+    </TableRow>
+    ))}
         </TableBody>
         </Table>
     </TableContainer>

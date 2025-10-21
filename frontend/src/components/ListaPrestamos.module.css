@@ -1,0 +1,18 @@
+.tableRow:hover {
+    background-color: #f5f5f5 !important;
+    cursor: pointer;
+}
+
+.tableRowAlternate {
+    background-color: #faf8f5;
+}
+
+.tableHeader {
+    background-color: #f0ebe5;
+}
+
+/* Estilo especial para las filas de préstamos atrasados */
+.tableRowOverdue {
+    background-color: #fff0f0 !important; /* Un rojo muy pálido */
+    border-left: 4px solid #e57373; /* Un borde izquierdo para destacar */
+}

@@ -24,7 +24,28 @@ const getPrestamosVigentes = async (req, res) => {
   }
 };
 
+const registrarDevolucion = async (req, res) => {
+  try {
+    // 1. Obtenemos el ID del préstamo desde los parámetros de la URL (ej: /api/prestamos/5/devolver)
+    const { id } = req.params;
+    
+    // 2. Obtenemos los datos enviados desde el frontend
+    const { estaDañado, nivelDeDaño } = req.body;
+    
+    // 3. Llamamos a la fachada con los datos (suponiendo que ya la actualizaste)
+    // Si no actualizaste la fachada, la llamada sería a: prestamoService.procesarDevolucion(id, estaDañado, nivelDeDaño)
+    const resultado = await bibliotecaFacade.procesarDevolucion(id, estaDañado, nivelDeDaño);
+    
+    res.status(200).json(resultado); // 200: OK
+    
+  } catch (error) {
+    console.error('Error al registrar la devolución:', error);
+    res.status(400).json({ mensaje: error.message });
+  }
+};
+
 module.exports = {
   crearPrestamo,
-  getPrestamosVigentes
+  getPrestamosVigentes,
+  registrarDevolucion,
 };

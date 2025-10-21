@@ -59,9 +59,22 @@ const obtenerUltimasDevoluciones = async () => {
     return resultado.rows;
 };
 
+const obtenerPorId = async (prestamoId) => {
+  const resultado = await pool.query('SELECT * FROM Prestamo WHERE prestamo_id = $1', [prestamoId]);
+  return resultado.rows[0];
+};
+
+const registrarDevolucion = async (prestamoId) => {
+  const consulta = 'UPDATE Prestamo SET fecha_devolucion = NOW() WHERE prestamo_id = $1 RETURNING *';
+  const resultado = await pool.query(consulta, [prestamoId]);
+  return resultado.rows[0];
+};
+
 module.exports = { 
     crear,
     obtenerVigentes,
     obtenerVencenHoy,
     obtenerUltimasDevoluciones,
+    obtenerPorId,
+    registrarDevolucion,
 };

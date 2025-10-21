@@ -43,6 +43,9 @@ export default function Navbar() {
                 Préstamos
             </Button>
         </Box>
+            <Button color="inherit" component={Link} href="/multas">
+                Multas
+            </Button>
         </Toolbar>
     </AppBar>
     );

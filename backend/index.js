@@ -5,6 +5,7 @@ const libroController = require("./src/controllers/libroController"); // Importa
 const prestamoController = require("./src/controllers/prestamoController");
 const app = express();
 const PORT = process.env.PORT || 3001;
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
 const estadisticasController = require("./src/controllers/estadisticasController");
 const reporteController = require("./src/controllers/reporteController");
 const multaController = require("./src/controllers/multaController");
@@ -12,12 +13,11 @@ const socioController = require("./src/controllers/socioController");
 const authController = require("./src/controllers/authController"); // Importar authController
 const { isAuthenticated } = require("./src/middleware/authMiddleware"); // Importar middleware
 
-app.use(
-  cors({
-    origin: "http://localhost:3000", // URL de tu frontend
-    credentials: true, // <-- MUY IMPORTANTE para que las cookies de sesión funcionen
-  })
-);
+app.use(cors({
+  origin: frontendUrl, // Permite peticiones SOLO desde esta URL
+  credentials: true
+}));
+
 app.use(express.json());
 
 app.use(
@@ -29,9 +29,14 @@ app.use(
       secure: process.env.NODE_ENV === 'production' , // Poner true si usás HTTPS
       httpOnly: true, // Protege contra ataques XSS
       maxAge: 1000 * 60 * 60 * 24, // Duración de la cookie (ej: 1 día)
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
     },
   })
 );
+
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1); // Confía en el primer proxy
+}
 
 // Definimos la ruta de la API y le decimos que use la función del controlador
 app.post("/api/auth/login", authController.login);

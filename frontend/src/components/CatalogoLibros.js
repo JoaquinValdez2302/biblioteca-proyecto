@@ -44,7 +44,8 @@ export default function CatalogoLibros() {
   // useEffect se ejecuta para buscar los datos cuando el componente se carga
   useEffect(() => {
     // Construimos la URL con los parámetros de búsqueda y paginación
-    const url = new URL("http://localhost:3001/api/libros");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const url = new URL(`${apiUrl}/api/libros`);
     if (busqueda) {
       url.searchParams.append("busqueda", busqueda);
     }

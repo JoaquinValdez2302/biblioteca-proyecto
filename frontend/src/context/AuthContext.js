@@ -15,9 +15,10 @@ export function AuthProvider({ children }) {
   // Efecto para verificar si hay una sesión activa al cargar la app
   useEffect(() => {
     const verificarSesion = async () => {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
       try {
         // Hacemos una petición a un endpoint (que crearemos) para saber si hay sesión
-        const response = await fetch('http://localhost:3001/api/auth/status', {
+        const response = await fetch(`${apiUrl}/api/auth/status`, {
           credentials: 'include' // IMPORTANTE: envía las cookies de sesión
         });
         if (response.ok) {
@@ -43,8 +44,9 @@ export function AuthProvider({ children }) {
 
   // Función para desloguear
   const logout = async () => {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
     try {
-      await fetch('http://localhost:3001/api/auth/logout', { 
+      await fetch(`${apiUrl}/api/auth/logout`, { 
         method: 'POST', 
         credentials: 'include' 
       });

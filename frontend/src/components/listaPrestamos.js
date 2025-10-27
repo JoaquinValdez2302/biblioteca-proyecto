@@ -36,7 +36,8 @@ export default function ListaPrestamos() {
   });
 
   useEffect(() => {
-    let url = "http://localhost:3001/api/prestamos/vigentes";
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    let url = `${apiUrl}/api/prestamos/vigentes`;
     if (mostrarAtrasados) {
       url += "?atrasados=true";
     }

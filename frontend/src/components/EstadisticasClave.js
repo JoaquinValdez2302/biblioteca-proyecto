@@ -12,7 +12,8 @@ export default function EstadisticasClave() {
     });
 
     useEffect(() => {
-    fetch('http://localhost:3001/api/estadisticas', {credentials: 'include'})
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        fetch(`${apiUrl}/api/estadisticas`, {credentials: 'include'})
         .then(res => res.json())
         .then(data => setStats(data))
         .catch(error => console.error("Error al cargar estadísticas:", error));

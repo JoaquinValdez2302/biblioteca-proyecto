@@ -24,7 +24,8 @@ export default function GestionMultas() {
   const [filtroEstado, setFiltroEstado] = useState("pendiente"); // 'pendiente' o 'pagada'
 
   useEffect(() => {
-    const url = new URL("http://localhost:3001/api/multas");
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const url = new URL(`${apiUrl}/api/multas`);
     url.searchParams.append("estado", filtroEstado);
     if (filtroNombre) {
       url.searchParams.append("nombre", filtroNombre);

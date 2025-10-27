@@ -24,6 +24,16 @@ const obtenerTodos = async (busqueda = '', pagina = 1, porPagina = 10) => {
   return resultado.rows;
 };
 
+const obtenerUltimosAgregados = async (limite = 5) => {
+  const consulta = `
+    SELECT libro_id, titulo, autor 
+    FROM Libro 
+    ORDER BY libro_id DESC 
+    LIMIT $1`;
+  const resultado = await pool.query(consulta, [limite]);
+  return resultado.rows;
+};
+
 const crear = async (titulo, autor, isbn, precio) => {
   const consulta = 'INSERT INTO Libro (titulo, autor, isbn, precio) VALUES ($1, $2, $3, $4) RETURNING *';
   const resultado = await pool.query(consulta, [titulo, autor, isbn, precio]);
@@ -46,4 +56,5 @@ module.exports = {
   obtenerPorId,     // Exportamos las nuevas funciones
   actualizarEstado,
   crear,
+  obtenerUltimosAgregados,
 };

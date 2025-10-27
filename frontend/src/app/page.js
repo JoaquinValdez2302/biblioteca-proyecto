@@ -1,84 +1,115 @@
 // src/app/page.js
 "use client";
-
-import React, { useState } from 'react';
-import { Container, Typography, Box, Button, Dialog, DialogTitle, DialogContent, Snackbar, Alert, handleCerrarNotificacion} from '@mui/material';
+import React, { useState, useEffect } from 'react';
+// Asegúrate de importar todos los componentes necesarios
+import { Container, Typography, Box, Snackbar, Alert, Grid, Paper, Divider, List, ListItem, ListItemText } from '@mui/material';
 import EstadisticasClave from '@/components/EstadisticasClave';
-import DashboardAlertas from '@/components/DashboardAlertas';
-import FormularioNuevoSocio from '@/components/FormularioNuevoSocio';
-import FormularioNuevoLibro from '@/components/FormularioNuevoLibro';
+import WidgetNuevosSocios from '@/components/WidgetNuevosSocios';
+import WidgetNuevosLibros from '@/components/WidgetNuevosLibros';
+import widgetStyles from '@/styles/DashboardWidget.module.css';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
 
 export default function HomePage() {
-  const [modalSocioAbierto, setModalSocioAbierto] = useState(false);
-  const [modalLibroAbierto, setModalLibroAbierto] = useState(false);
-  const [notificacion, setNotificacion] = useState({ abierto: false, mensaje: '', severidad: 'success' }); // Para feedback
+  const [notificacion, setNotificacion] = useState({ abierto: false, mensaje: '', severidad: 'success' });
+  const [vencenHoy, setVencenHoy] = useState([]);
+  const [ultimasDevoluciones, setUltimasDevoluciones] = useState([]);
 
+  // Funciones para manejar notificaciones
   const handleSocioAgregado = (socio) => {
-    setModalSocioAbierto(false);
     setNotificacion({ abierto: true, mensaje: `Socio ${socio.nombre_completo} agregado con éxito`, severidad: 'success' });
-    // Podrías recargar estadísticas aquí si fuera necesario
+  };
+  const handleLibroAgregado = (libro) => {
+    setNotificacion({ abierto: true, mensaje: `Libro "${libro.titulo}" agregado con éxito`, severidad: 'success' });
+  };
+  const handleCerrarNotificacion = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setNotificacion({ ...notificacion, abierto: false });
   };
 
-  const handleLibroAgregado = (libro) => {
-    setModalLibroAbierto(false);
-    setNotificacion({ abierto: true, mensaje: `Libro "${libro.titulo}" agregado con éxito`, severidad: 'success' });
-    // Podrías recargar estadísticas aquí
-  };
+  // useEffect para cargar datos de alertas
+  useEffect(() => {
+    fetch('http://localhost:3001/api/reportes/vencen-hoy', {credentials: 'include'} )
+      .then(res => res.json())
+      .then(data => setVencenHoy(data));
+    fetch('http://localhost:3001/api/reportes/ultimas-devoluciones', {credentials: 'include'})
+      .then(res => res.json())
+      .then(data => setUltimasDevoluciones(data));
+  }, []);
+
   return (
+    <ProtectedRoute>
     <Container sx={{ marginTop: 4 }}>
+      <EstadisticasClave />
+
+      <div className={widgetStyles.widgetGrid} style={{ margin: '32px 0' }}>
+        {/* Widget 1: Vencen Hoy */}
+        <Paper elevation={2} className={widgetStyles.widgetCard}>
+          <Typography variant="h6" className={widgetStyles.widgetTitle}>
+            Préstamos que Vencen Hoy
+          </Typography>
+          <Divider sx={{ mb: 1 }} />
+          {vencenHoy.length > 0 ? (
+            <List dense className={widgetStyles.widgetList}>
+              {/* CORREGIR ESTE BLOQUE */}
+              {vencenHoy.map((p, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={p.titulo} secondary={`Socio: ${p.nombre_completo}`} />
+                </ListItem>
+              ))}
+              {/* FIN DEL BLOQUE CORREGIDO */}
+            </List>
+          ) : (
+            <Typography sx={{ mt: 2, fontStyle: 'italic' }}>No hay vencimientos para hoy.</Typography>
+          )}
+        </Paper>
+
+        {/* Widget 2: Últimas Devoluciones */}
+        <Paper elevation={2} className={widgetStyles.widgetCard}>
+          <Typography variant="h6" className={widgetStyles.widgetTitle}>
+            Últimas Devoluciones
+          </Typography>
+          <Divider sx={{ mb: 1 }} />
+          {ultimasDevoluciones.length > 0 ? (
+            <List dense className={widgetStyles.widgetList}>
+              {/* CORREGIR ESTE BLOQUE */}
+              {ultimasDevoluciones.map((d, index) => (
+                <ListItem key={index}>
+                  <ListItemText primary={d.titulo} secondary={`Devuelto el: ${new Date(d.fecha_devolucion).toLocaleDateString()}`} />
+                </ListItem>
+              ))}
+              {/* FIN DEL BLOQUE CORREGIDO */}
+            </List>
+          ) : (
+            <Typography sx={{ mt: 2, fontStyle: 'italic' }}>No se han registrado devoluciones recientes.</Typography>
+          )}
+        </Paper>
+
+        {/* Widget 3: Nuevos Socios */}
+        <WidgetNuevosSocios onSocioAgregado={handleSocioAgregado} />
+
+        {/* Widget 4: Nuevos Libros */}
+        <WidgetNuevosLibros onLibroAgregado={handleLibroAgregado} />
+      </div>
+
       <Typography variant="h4" gutterBottom>
-        <EstadisticasClave />
-        <Box sx={{ my: 4 }}>
-          <DashboardAlertas />
-        </Box>
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', my: 4 }}>
-          <Button variant="contained" onClick={() => setModalSocioAbierto(true)}>
-            Agregar Nuevo Socio
-          </Button>
-          <Button variant="contained" onClick={() => setModalLibroAbierto(true)}>
-            Agregar Nuevo Libro
-          </Button>
-        </Box>
         ¡Bienvenido al Sistema de Gestión!
       </Typography>
       <Typography variant="body1">
         Seleccioná una opción en la barra de navegación para comenzar.
       </Typography>
-      <Dialog open={modalSocioAbierto} onClose={() => setModalSocioAbierto(false)}>
-        <DialogTitle>Agregar Nuevo Socio</DialogTitle>
-        <DialogContent>
-          <FormularioNuevoSocio
-            alAgregar={handleSocioAgregado}
-            alCancelar={() => setModalSocioAbierto(false)}
-          />
-        </DialogContent>
-      </Dialog>
-      <Dialog open={modalLibroAbierto} onClose={() => setModalLibroAbierto(false)}>
-        <DialogTitle>Agregar Nuevo Libro</DialogTitle>
-        <DialogContent>
-          {/* Renderizamos el formulario de libro dentro del modal */}
-          <FormularioNuevoLibro
-            alAgregar={handleLibroAgregado}
-            alCancelar={() => setModalLibroAbierto(false)}
-          />
-        </DialogContent>
-      </Dialog>
+
       <Snackbar
         open={notificacion.abierto}
-        autoHideDuration={6000} // Se cierra automáticamente después de 6 segundos
+        autoHideDuration={6000}
         onClose={handleCerrarNotificacion}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Posición
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        {/* Usamos Alert para darle estilo según la severidad */}
-        <Alert
-          onClose={handleCerrarNotificacion}
-          severity={notificacion.severidad}
-          sx={{ width: '100%' }}
-        >
+        <Alert onClose={handleCerrarNotificacion} severity={notificacion.severidad} sx={{ width: '100%' }}>
           {notificacion.mensaje}
         </Alert>
       </Snackbar>
     </Container>
+    </ProtectedRoute>
   );
 }

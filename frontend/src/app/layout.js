@@ -1,6 +1,9 @@
 import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import Navbar from '@/components/Navbar';
+import { AuthProvider } from '@/context/AuthContext';
+
+
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
@@ -17,8 +20,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body style={{ backgroundColor: '#e6d6b8' }} className={instrumentSerif.className}>
-        <Navbar /> {/* 2. Añadir el Navbar aquí */}
-        {children}
+        <AuthProvider> 
+          <Navbar />
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

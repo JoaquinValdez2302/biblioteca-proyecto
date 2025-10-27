@@ -12,4 +12,4 @@ const getEstadisticas = async (req, res) => {
 
 module.exports = {
     getEstadisticas,
-};
+}; 

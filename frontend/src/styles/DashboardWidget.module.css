@@ -1,0 +1,30 @@
+/* src/styles/DashboardWidget.module.css */
+
+/* Contenedor para las tarjetas */
+.widgetGrid {
+  display: grid;
+  /* Cambiamos a 4 columnas */
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 24px;
+  align-items: stretch;
+}
+
+/* Estilo base para cada tarjeta */
+.widgetCard {
+  background-color: #fffbe6 !important; /* Color de fondo unificado */
+  padding: 16px;
+  display: flex; /* Para controlar la altura interna */
+  flex-direction: column; /* Apila título y lista verticalmente */
+  height: 100%; /* Asegura que la tarjeta ocupe toda la altura de la celda del grid */
+}
+
+/* Estilo para el título de la tarjeta */
+.widgetTitle {
+  margin-bottom: 12px !important;
+}
+
+/* Estilo para la lista dentro de la tarjeta */
+.widgetList {
+  flex-grow: 1; /* Permite que la lista ocupe el espacio sobrante */
+  overflow-y: auto; /* Añade scroll si la lista es muy larga */
+}

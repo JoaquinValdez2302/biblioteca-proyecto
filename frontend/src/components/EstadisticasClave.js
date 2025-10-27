@@ -12,7 +12,7 @@ export default function EstadisticasClave() {
     });
 
     useEffect(() => {
-    fetch('http://localhost:3001/api/estadisticas')
+    fetch('http://localhost:3001/api/estadisticas', {credentials: 'include'})
         .then(res => res.json())
         .then(data => setStats(data))
         .catch(error => console.error("Error al cargar estadísticas:", error));

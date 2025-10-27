@@ -1,17 +1,18 @@
+// src/app/socios/page.js
 "use client";
 import React from "react";
 import { Container, Typography } from "@mui/material";
-import GestionMultas from "@/components/GestionMultas";
+import ListaSocios from "@/components/ListaSocios"; // Importaremos el nuevo componente
 import ProtectedRoute from '@/components/ProtectedRoute';
 
-export default function MultasPage() {
+export default function SociosPage() {
   return (
     <ProtectedRoute>
       <Container sx={{ marginTop: 4 }}>
         <Typography variant="h4" gutterBottom className="title">
-          Centro de Gestión de Cobros
+          Listado de Socios
         </Typography>
-        <GestionMultas />
+        <ListaSocios />
       </Container>
     </ProtectedRoute>
   );

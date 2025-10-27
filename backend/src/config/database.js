@@ -8,12 +8,10 @@ function getPool() {
   // Si la instancia del pool todavía no existe, la creamos
     if (!poolInstance) {
     console.log("Creando una nueva instancia del pool de conexiones...");
+    const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:guillotinekuro202@localhost:5432/biblioteca';
+
     poolInstance = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'biblioteca',
-    password: 'guillotinekuro202',
-    port: 5432,
+      connectionString: connectionString,
     });
 }
 

@@ -9,9 +9,8 @@ const estadisticasController = require("./src/controllers/estadisticasController
 const reporteController = require("./src/controllers/reporteController");
 const multaController = require("./src/controllers/multaController");
 const socioController = require("./src/controllers/socioController");
-const authController = require('./src/controllers/authController'); // Importar authController
-const { isAuthenticated } = require('./src/middleware/authMiddleware'); // Importar middleware
-
+const authController = require("./src/controllers/authController"); // Importar authController
+const { isAuthenticated } = require("./src/middleware/authMiddleware"); // Importar middleware
 
 app.use(
   cors({
@@ -23,23 +22,22 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: "@zgBrrOWaSIiLV-BvcVTVzWMw%;N09kV;^4()CvewZekvudwA7", // Cambiá esto por una cadena aleatoria larga
+    secret: process.env.SESSION_SECRET || "@zgBrrOWaSIiLV-BvcVTVzWMw%;N09kV;^4()CvewZekvudwA7", // Cambiá esto por una cadena aleatoria larga
     resave: false,
     saveUninitialized: false, // No guardar sesiones vacías
     cookie: {
-      secure: false, // Poner true si usás HTTPS
+      secure: process.env.NODE_ENV === 'production' , // Poner true si usás HTTPS
       httpOnly: true, // Protege contra ataques XSS
       maxAge: 1000 * 60 * 60 * 24, // Duración de la cookie (ej: 1 día)
     },
   })
 );
 
-
 // Definimos la ruta de la API y le decimos que use la función del controlador
-app.post('/api/auth/login', authController.login);
-app.post('/api/auth/logout', authController.logout);
-app.use('/api', isAuthenticated); // Todas las rutas que empiecen con /api estarán protegidas
-app.get('/api/auth/status', authController.status);
+app.post("/api/auth/login", authController.login);
+app.post("/api/auth/logout", authController.logout);
+app.use("/api", isAuthenticated); // Todas las rutas que empiecen con /api estarán protegidas
+app.get("/api/auth/status", authController.status);
 app.get("/api/socios/ultimos", socioController.getUltimosSocios);
 app.get("/api/libros/ultimos", libroController.getUltimosLibros);
 app.get("/api/socios", socioController.getSocios);

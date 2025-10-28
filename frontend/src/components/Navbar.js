@@ -6,8 +6,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import styles from "./Navbar.module.css"; // Reutilizamos los estilos del header
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
+  const { usuario, logout } = useAuth();
+
   return (
     <AppBar position="static" className={styles.appBar}>
       <Toolbar>
@@ -48,6 +51,25 @@ export default function Navbar() {
           <Button color="inherit" component={Link} href="/socios">
             Socios
           </Button>
+        </Box>
+        <Box sx={{ marginLeft: 2 }}>
+          {" "}
+          {/* Separador */}
+          {usuario ? (
+            // Si el usuario está logueado
+            <>
+              <Button color="inherit" onClick={logout} className="logOutButton">
+                {" "}
+                {/* Llama a la función logout del contexto */}
+                Cerrar Sesión
+              </Button>
+            </>
+          ) : (
+            // Si el usuario NO está logueado
+            <Button color="inherit" component={Link} href="/login" >
+              Iniciar Sesión
+            </Button>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

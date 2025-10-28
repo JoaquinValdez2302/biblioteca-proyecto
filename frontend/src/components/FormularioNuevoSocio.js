@@ -3,14 +3,69 @@
 import React, { useState } from "react";
 import { TextField, Button, Box } from "@mui/material";
 
+const validarEmail = (email) => {
+  if (!email) return true; // Email es opcional
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(String(email).toLowerCase());
+};
+
+const validarDni = (dni) => {
+  const re = /^[0-9]{7,8}$/;
+  return re.test(String(dni));
+};
+
+const validarNombre = (nombre) => {
+  const re = /^[a-zA-Z\s]+$/; // Permite letras (mayúsculas/minúsculas) y espacios
+  return re.test(String(nombre));
+};
+
+const validarTelefono = (telefono) => {
+  if (!telefono) return true; // Sigue siendo opcional
+  const re = /^[0-9\s+-]+$/;
+  return re.test(String(telefono));
+};
+
 export default function FormularioNuevoSocio({ alAgregar, alCancelar }) {
   const [nombre, setNombre] = useState("");
   const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
   const [telefono, setTelefono] = useState("");
+  const [errorDni, setErrorDni] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [errorTelefono, setErrorTelefono] = useState("");
+  const [errorGeneral, setErrorGeneral] = useState("");
+  const [errorNombre, setErrorNombre] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorDni("");
+    setErrorEmail("");
+    setErrorGeneral("");
+    setErrorNombre("");
+    setErrorTelefono('');
+    let esValido = true;
+
+    if (!validarNombre(nombre)) {
+      setErrorNombre("El nombre solo debe contener letras y espacios.");
+      esValido = false;
+    }
+
+    if (!validarDni(dni)) {
+      setErrorDni("El DNI debe tener 7 u 8 dígitos numéricos.");
+      esValido = false;
+    }
+    if (!validarEmail(email)) {
+      setErrorEmail("El formato del email no es válido.");
+      esValido = false;
+    }
+
+    if (!validarTelefono(telefono)) {
+      setErrorTelefono('El teléfono solo debe contener números, espacios, + o -.');
+      esValido = false;
+    }
+
+    if (!esValido) return;
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"; // Fallback por si acaso
 
@@ -21,12 +76,16 @@ export default function FormularioNuevoSocio({ alAgregar, alCancelar }) {
         body: JSON.stringify({ nombreCompleto: nombre, dni, email, telefono }),
         credentials: "include",
       });
-      if (!response.ok) throw new Error("Error al guardar socio");
-      const nuevoSocio = await response.json();
-      alAgregar(nuevoSocio); // Llama a la función del padre
+
+      const data = await response.json();
+      if (!response.ok) {
+        // Mostrar error del backend
+        throw new Error(data.mensaje || "Error al guardar socio");
+      }
+      alAgregar(data);
     } catch (error) {
       console.error(error);
-      // Aquí podrías mostrar un error
+      setErrorGeneral(error.message); // Mostrar error general
     }
   };
 
@@ -39,6 +98,8 @@ export default function FormularioNuevoSocio({ alAgregar, alCancelar }) {
         fullWidth
         margin="normal"
         required
+        error={!!errorNombre}
+        helperText={errorNombre}
       />
       <TextField
         label="DNI"
@@ -47,27 +108,39 @@ export default function FormularioNuevoSocio({ alAgregar, alCancelar }) {
         fullWidth
         margin="normal"
         required
+        error={!!errorDni}
+        helperText={errorDni}
       />
       <TextField
-        label="Email (opcional)"
+        label="Email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         fullWidth
         margin="normal"
+        required
+        error={!!errorEmail}
+        helperText={errorEmail}
       />
       <TextField
-        label="Teléfono (opcional)"
+        label="Teléfono"
         value={telefono}
         onChange={(e) => setTelefono(e.target.value)}
         fullWidth
         margin="normal"
+        required
+        error={!!errorTelefono}
+        helperText={errorTelefono}
       />
       <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
         <Button onClick={alCancelar} className="modalCancelButton">
           Cancelar
         </Button>
-        <Button type="submit" variant="contained" className="modalConfirmButton">
+        <Button
+          type="submit"
+          variant="contained"
+          className="modalConfirmButton"
+        >
           Agregar Socio
         </Button>
       </Box>

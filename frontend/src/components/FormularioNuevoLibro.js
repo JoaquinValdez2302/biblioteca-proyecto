@@ -3,25 +3,70 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 
+const validarPrecio = (precio) => {
+  if (precio === "" || precio === null) return false; // Precio es obligatorio
+  const numPrecio = parseFloat(precio);
+  return !isNaN(numPrecio) && numPrecio >= 0;
+};
+// Validación simple de ISBN
+const validarIsbn = (isbn) => {
+  if (!isbn) return false;
+  const cleanedIsbn = isbn.replace(/-/g, "");
+  return cleanedIsbn.length === 10 || cleanedIsbn.length === 13;
+};
+
+const validarTextoSimple = (texto) => {
+  return texto && texto.trim().length > 0; // Verifica que no sea nulo y que no sean solo espacios
+};
+
 export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
   const [titulo, setTitulo] = useState("");
   const [autor, setAutor] = useState("");
   const [isbn, setIsbn] = useState("");
   const [precio, setPrecio] = useState("");
-  const [error, setError] = useState(""); // State to hold error messages
+  // Estados para errores específicos
+  const [errorIsbn, setErrorIsbn] = useState("");
+  const [errorPrecio, setErrorPrecio] = useState("");
+  const [errorGeneral, setErrorGeneral] = useState("");
+  const [errorTitulo, setErrorTitulo] = useState("");
+  const [errorAutor, setErrorAutor] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setErrorIsbn("");
+    setErrorPrecio("");
+    setErrorGeneral("");
+    setErrorTitulo("");
+    setErrorAutor("");
 
-    // Basic validation (optional, can add more specific checks)
-    if (!titulo || !autor || !isbn || !precio) {
-      setError("Todos los campos son obligatorios.");
-      return;
+    let esValido = true;
+
+    if (!validarTextoSimple(titulo)) {
+      setErrorTitulo("El título es obligatorio.");
+      esValido = false;
     }
-    if (isNaN(parseFloat(precio)) || parseFloat(precio) < 0) {
-      setError("El precio debe ser un número válido.");
-      return;
+
+    if (!validarTextoSimple(autor)) {
+      setErrorAutor("El autor es obligatorio.");
+      esValido = false;
+    }
+
+    if (!validarIsbn(isbn)) {
+      setErrorIsbn(
+        "El ISBN debe tener 10 o 13 caracteres (guiones opcionales)."
+      );
+      esValido = false;
+    }
+
+    if (!validarPrecio(precio)) {
+      setErrorPrecio(
+        "El precio debe ser un número válido mayor o igual a cero."
+      );
+      esValido = false;
+    }
+    if (!titulo || !autor) {
+      setErrorGeneral("Título y Autor son obligatorios."); // Usar error general para estos
+      esValido = false;
     }
 
     try {
@@ -40,17 +85,18 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         credentials: "include",
       });
 
-      const data = await response.json(); // Always try to parse the response
-
+      const data = await response.json();
       if (!response.ok) {
-        // Use the error message from the backend if available
+        // Mostrar error del backend (ej: ISBN duplicado)
         throw new Error(data.mensaje || "Error al guardar el libro.");
       }
-
-      alAgregar(data); // Call the parent function with the new book data
+      alAgregar(data);
     } catch (err) {
       console.error(err);
-      setError(err.message); // Display the error message to the user
+      // Mostrar error general si no es de validación local
+      if (!errorTitulo && !errorAutor && !errorIsbn && !errorPrecio) {
+        setErrorGeneral(err.message);
+      }
     }
   };
 
@@ -63,6 +109,8 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         fullWidth
         margin="normal"
         required
+        error={!!errorTitulo}
+        helperText={errorTitulo}
       />
       <TextField
         label="Autor"
@@ -71,6 +119,8 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         fullWidth
         margin="normal"
         required
+        error={!!errorAutor}
+        helperText={errorAutor}
       />
       <TextField
         label="ISBN"
@@ -79,6 +129,8 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         fullWidth
         margin="normal"
         required
+        error={!!errorIsbn}
+        helperText={errorIsbn}
       />
       <TextField
         label="Precio"
@@ -89,12 +141,14 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         required
         type="number"
         inputProps={{ step: "0.01" }}
+        error={!!errorPrecio}
+        helperText={errorPrecio}
       />
 
       {/* Display error message if any */}
-      {error && (
+      {errorGeneral && (
         <Typography color="error" variant="body2" sx={{ mt: 1 }}>
-          {error}
+          {errorGeneral}
         </Typography>
       )}
 
@@ -102,7 +156,11 @@ export default function FormularioNuevoLibro({ alAgregar, alCancelar }) {
         <Button onClick={alCancelar} className="modalCancelButton">
           Cancelar
         </Button>
-        <Button type="submit" variant="contained" className="modalConfirmButton">
+        <Button
+          type="submit"
+          variant="contained"
+          className="modalConfirmButton"
+        >
           Agregar Libro
         </Button>
       </Box>

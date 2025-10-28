@@ -26,8 +26,6 @@ import styles from "./CatalogoLibros.module.css";
 
 export default function CatalogoLibros() {
   const [libros, setLibros] = useState([]);
-
-  // --- NUEVOS ESTADOS ---
   const [modalAbierto, setModalAbierto] = useState(false); // Para controlar si el modal se muestra
   const [libroSeleccionado, setLibroSeleccionado] = useState(null); // Para saber qué libro prestar
   const [numeroDeSocio, setNumeroDeSocio] = useState(""); // Para guardar el número de socio del input
@@ -38,24 +36,30 @@ export default function CatalogoLibros() {
   }); // Para las notificaciones
   const [busqueda, setBusqueda] = useState(""); // Para el input de búsqueda
   const [pagina, setPagina] = useState(1); // Para la página actual
-  // -----------------------
-  // Estado para guardar la lista de libros
+  const [totalLibros, setTotalLibros] = useState(0);
+  const itemsPorPagina = 10;
 
   // useEffect se ejecuta para buscar los datos cuando el componente se carga
   useEffect(() => {
     // Construimos la URL con los parámetros de búsqueda y paginación
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     const url = new URL(`${apiUrl}/api/libros`);
+    url.searchParams.append("pagina", pagina);
+    url.searchParams.append("porPagina", itemsPorPagina);
+
     if (busqueda) {
       url.searchParams.append("busqueda", busqueda);
     }
-    url.searchParams.append("pagina", pagina);
 
     fetch(url, { credentials: "include" })
       .then((response) => response.json())
-      .then((data) => setLibros(data.libros || []))
+      .then((data) => {
+        setLibros(data.libros || []);
+        setTotalLibros(data.total || 0);
+      })
       .catch((error) => console.error("Error al obtener los libros:", error));
   }, [busqueda, pagina]); // <-- Se ejecuta de nuevo si 'busqueda' o 'pagina' cambian []); // El array vacío asegura que se ejecute solo una vez
+  
   const handleAbrirModal = (libro) => {
     setLibroSeleccionado(libro);
     setModalAbierto(true);
@@ -116,6 +120,9 @@ export default function CatalogoLibros() {
       handleCerrarModal();
     }
   };
+
+const totalPaginas = Math.ceil(totalLibros / itemsPorPagina);
+
   return (
     <div className={styles.mainBox}>
       <div className={styles.controlsContainer}>
@@ -146,9 +153,10 @@ export default function CatalogoLibros() {
           >
             Anterior
           </button>
-          <span className={tableStyles.pageNumber}>Página {pagina}</span>
+          <span className={tableStyles.pageNumber}>Página {pagina} de {totalPaginas > 0 ? totalPaginas : 1}</span>
           <button
             onClick={() => setPagina((p) => p + 1)}
+            disabled={pagina >= totalPaginas}
             className={tableStyles.paginationButton}
           >
             Siguiente
@@ -242,8 +250,18 @@ export default function CatalogoLibros() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setModalAbierto(false)} className="modalCancelButton">Cancelar</Button>
-          <Button onClick={handleConfirmarPrestamo} className="modalConfirmButton">Confirmar Préstamo</Button>
+          <Button
+            onClick={() => setModalAbierto(false)}
+            className="modalCancelButton"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleConfirmarPrestamo}
+            className="modalConfirmButton"
+          >
+            Confirmar Préstamo
+          </Button>
         </DialogActions>
       </Dialog>
       {/* ------------------------- */}

@@ -44,14 +44,14 @@ export default function CatalogoLibros() {
   // useEffect se ejecuta para buscar los datos cuando el componente se carga
   useEffect(() => {
     // Construimos la URL con los parámetros de búsqueda y paginación
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     const url = new URL(`${apiUrl}/api/libros`);
     if (busqueda) {
       url.searchParams.append("busqueda", busqueda);
     }
     url.searchParams.append("pagina", pagina);
 
-    fetch(url, {credentials: 'include'}) 
+    fetch(url, { credentials: "include" })
       .then((response) => response.json())
       .then((data) => setLibros(data))
       .catch((error) => console.error("Error al obtener los libros:", error));
@@ -70,7 +70,11 @@ export default function CatalogoLibros() {
     if (!numeroDeSocio || !libroSeleccionado) return;
 
     try {
-      const response = await fetch("http://localhost:3001/api/prestamos", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+      // 2. Usar apiUrl para construir la URL completa
+      const response = await fetch(`${apiUrl}/api/prestamos`, {
+        // <-- Usar apiUrl aquí
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -79,6 +83,7 @@ export default function CatalogoLibros() {
           numeroDeSocio: numeroDeSocio,
           libroId: libroSeleccionado.libro_id,
         }),
+        credentials: "include", // 3. Asegúrate de añadir credentials
       });
 
       const data = await response.json();

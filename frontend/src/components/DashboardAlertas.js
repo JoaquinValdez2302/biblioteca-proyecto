@@ -17,14 +17,20 @@ export default function DashboardAlertas() {
   const [ultimasDevoluciones, setUltimasDevoluciones] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/reportes/vencen-hoy")
-      .then((res) => res.json())
+    fetch(`${apiUrl}/api/reportes/vencen-hoy`, {
+      // 2. Usar apiUrl aquí
+      credentials: "include", // 3. Añadir credentials
+    })
+      .thefen((res) => res.json())
       .then((data) => setVencenHoy(data))
       .catch((error) =>
         console.error("Error al cargar préstamos que vencen hoy:", error)
       );
 
-    fetch("http://localhost:3001/api/reportes/ultimas-devoluciones")
+    fetch(`${apiUrl}/api/reportes/ultimas-devoluciones`, {
+      // 2. Usar apiUrl aquí
+      credentials: "include", // 3. Añadir credentials
+    })
       .then((res) => res.json())
       .then((data) => setUltimasDevoluciones(data))
       .catch((error) =>

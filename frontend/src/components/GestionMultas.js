@@ -24,26 +24,48 @@ export default function GestionMultas() {
   const [filtroEstado, setFiltroEstado] = useState("pendiente"); // 'pendiente' o 'pagada'
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     const url = new URL(`${apiUrl}/api/multas`);
     url.searchParams.append("estado", filtroEstado);
     if (filtroNombre) {
       url.searchParams.append("nombre", filtroNombre);
     }
 
-    fetch(url, {credentials: 'include'})
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setMultas(data));
   }, [filtroNombre, filtroEstado]);
 
   const handleRegistrarPago = async (multaId) => {
     if (!confirm("¿Confirmas que esta multa ha sido pagada?")) return;
+    try {
+      // 1. Obtener la URL base de la variable de entorno
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-    await fetch(`http://localhost:3001/api/multas/${multaId}/pagar`, {
-      method: "PATCH",
-    });
-    setMultas(multas.filter((m) => m.multa_id !== multaId));
-    // Aquí podrías añadir una notificación de éxito
+      // 2. Usar apiUrl para construir la URL completa
+      const response = await fetch(`${apiUrl}/api/multas/${multaId}/pagar`, {
+        method: "PATCH",
+        credentials: "include", // <-- 3. Añadir credentials
+      });
+
+      // 4. Verificar si la respuesta fue exitosa
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.mensaje || "Error al registrar el pago.");
+      }
+
+      // Actualizar el estado solo si la petición fue exitosa
+      setMultas((prevMultas) =>
+        prevMultas.filter((m) => m.multa_id !== multaId)
+      ); // Usar actualización funcional es más seguro
+
+      // Aquí podrías añadir una notificación de éxito si tenés el estado 'notificacion'
+      // setNotificacion({ abierto: true, mensaje: 'Pago registrado con éxito', severidad: 'success' });
+    } catch (error) {
+      console.error("Error al registrar pago:", error);
+      // Aquí podrías mostrar el error en una notificación si tenés el estado 'notificacion'
+      // setNotificacion({ abierto: true, mensaje: error.message, severidad: 'error' });
+    }
   };
 
   return (

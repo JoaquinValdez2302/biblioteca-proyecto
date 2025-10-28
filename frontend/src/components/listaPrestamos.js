@@ -36,12 +36,12 @@ export default function ListaPrestamos() {
   });
 
   useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
     let url = `${apiUrl}/api/prestamos/vigentes`;
     if (mostrarAtrasados) {
       url += "?atrasados=true";
     }
-    fetch(url, {credentials: 'include'})
+    fetch(url, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setPrestamos(data));
   }, [mostrarAtrasados]);
@@ -63,12 +63,16 @@ export default function ListaPrestamos() {
     const estaDañado = nivelDeDaño !== "sin_daños";
 
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+
+      // 2. Usar apiUrl para construir la URL completa
       const response = await fetch(
-        `http://localhost:3001/api/prestamos/${prestamoSeleccionado.prestamo_id}/devolver`,
+        `${apiUrl}/api/prestamos/${prestamoSeleccionado.prestamo_id}/devolver`, // <-- Usar apiUrl aquí
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ estaDañado, nivelDeDaño }),
+          credentials: "include", // <-- 3. Añadir credentials
         }
       );
 
@@ -166,8 +170,8 @@ export default function ListaPrestamos() {
                     <TableCell align="right">
                       <Button
                         className={tableStyles.actionButton} // Usamos la clase unificada
-                      size="small"
-                      onClick={() => handleAbrirModalDevolucion(p)}
+                        size="small"
+                        onClick={() => handleAbrirModalDevolucion(p)}
                       >
                         Devolver
                       </Button>

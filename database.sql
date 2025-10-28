@@ -59,23 +59,5 @@ CREATE TABLE Usuario (
   rol VARCHAR(20) NOT NULL DEFAULT 'bibliotecario' -- Para futuros roles (admin, etc.)
 );
 
--- --- DATOS INICIALES ---
-
--- Insertar un usuario administrador (cambiar el hash por el generado con bcrypt)
--- El hash de ejemplo aquí es para la contraseña 'admin123'
-INSERT INTO Usuario (nombre_usuario, contraseña_hash, rol) 
-VALUES ('admin', '$2b$10$s.4/0hyumM2z8jq3R861kOFHNBqbrFvS1A3MmO11sn4FW61Nhjcri', 'admin'); 
--- ¡¡¡Recordá reemplazar el hash de ejemplo por el real!!!
-
--- Insertar un socio de prueba (el número de socio se asignará después por el backend)
-INSERT INTO Socio (nombre_completo, dni, email, telefono) 
-VALUES ('Juan Pérez Ejemplo', '11223344', 'juan.perez@email.com', '11-5555-4444');
-
--- Insertar un libro de prueba con precio
-INSERT INTO Libro (isbn, titulo, autor, precio) 
-VALUES ('978-0743273565', 'El Gran Gatsby', 'F. Scott Fitzgerald', 15.50);
-INSERT INTO Libro (isbn, titulo, autor, precio) 
-VALUES ('978-8497592208', '1984', 'George Orwell', 12.00);
-
 -- Mensaje final (opcional, para ver en la consola de psql)
 \echo 'Script de base de datos ejecutado con éxito.'

@@ -79,7 +79,15 @@ export default function WidgetNuevosLibros({ onLibroAgregado }) {
 
       {/* El modal no necesita cambios de estilo */}
       <Dialog open={modalAbierto} onClose={() => setModalAbierto(false)}>
-        {/* ... */}
+        <DialogTitle>Agregar Nuevo Libro</DialogTitle>
+        <DialogContent>
+          {/* --- ASEGURATE DE QUE ESTA LÍNEA ESTÉ AQUÍ --- */}
+          <FormularioNuevoLibro
+            alAgregar={handleLibroAgregadoLocal}
+            alCancelar={() => setModalAbierto(false)}
+          />
+          {/* ------------------------------------------- */}
+        </DialogContent>
       </Dialog>
     </Paper>
   );

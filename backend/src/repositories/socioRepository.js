@@ -1,14 +1,21 @@
+
+
 const pool = require("../config/database");
 
-// Cambiamos la función para que busque por el número de socio
+/**
+ * Busca un socio por su número de socio.
+ */
 const obtenerPorNumeroDeSocio = async (numeroDeSocio) => {
   const resultado = await pool.query(
     "SELECT * FROM Socio WHERE numero_de_socio = $1",
     [numeroDeSocio]
   );
-  return resultado.rows[0]; // Devuelve el socio encontrado o undefined
+  return resultado.rows[0];
 };
 
+/**
+ * Actualiza la fecha de suspensión de un socio.
+ */
 const actualizarSancion = async (socioId, fechaSancion) => {
   await pool.query(
     "UPDATE Socio SET sancionado_hasta = $1 WHERE socio_id = $2",
@@ -16,6 +23,9 @@ const actualizarSancion = async (socioId, fechaSancion) => {
   );
 };
 
+/**
+ * Obtiene una lista paginada y filtrada de todos los socios.
+ */
 const obtenerTodos = async (busqueda = '', pagina = 1, porPagina = 10) => {
   const offset = (pagina - 1) * porPagina;
   let filtroBusqueda = '';
@@ -56,6 +66,9 @@ const obtenerTodos = async (busqueda = '', pagina = 1, porPagina = 10) => {
   };
 };
 
+/**
+ * Crea un nuevo socio y le asigna un número de socio único.
+ */
 const crear = async (nombreCompleto, dni, email, telefono) => {
   const client = await pool.connect();
   console.log("Iniciando transacción para crear socio..."); // <-- LOG 1
@@ -95,9 +108,10 @@ const crear = async (nombreCompleto, dni, email, telefono) => {
   }
 };
 
-
+/**
+ * Obtiene los últimos socios registrados en el sistema.
+ */
 const obtenerUltimosAgregados = async (limite = 5) => {
-  // Ordenamos por ID descendente para obtener los más recientes
   const consulta = `
     SELECT socio_id, nombre_completo, numero_de_socio 
     FROM Socio 

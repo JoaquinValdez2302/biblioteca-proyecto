@@ -1,21 +1,28 @@
+/**
+ * @fileoverview Repositorio para la entidad Multa.
+ * Gestiona todas las operaciones de base de datos para las multas.
+ */
+
 const pool = require('../config/database');
 
+/**
+ * Crea un nuevo registro de multa en la base de datos.
+ */
 const crear = async (socioId, motivo, monto) => {
-  // Añadimos un try...catch para capturar cualquier error de la base de datos
   try {
     const consulta = 'INSERT INTO Multa (socio_id, motivo, monto) VALUES ($1, $2, $3) RETURNING *';
     const valores = [socioId, motivo, monto];
     const resultado = await pool.query(consulta, valores);
-    console.log('✅ Multa guardada en la base de datos con éxito.'); // Mensaje de confirmación
     return resultado.rows[0];
   } catch (error) {
-    console.error('❌ ERROR AL GUARDAR LA MULTA EN LA BASE DE DATOS:', error);
-    // Lanzamos el error para que las capas superiores sepan que algo salió mal
+    console.error('ERROR AL GUARDAR LA MULTA EN LA BASE DE DATOS:', error);
     throw error;
   }
 };
 
-// --- NUEVAS FUNCIONES ---
+/**
+ * Obtiene una lista de multas, permitiendo filtrar por nombre de socio y estado.
+ */
 const obtenerMultas = async (filtroNombre = '', filtroEstado = 'pendiente') => {
 let consulta = `
     SELECT m.multa_id, m.monto, m.motivo, m.fecha_emision, m.estado, s.nombre_completo
@@ -36,6 +43,9 @@ let consulta = `
     return resultado.rows;
 };  
 
+/**
+ * Actualiza el estado de una multa específica
+ */
 const actualizarEstado = async (multaId, nuevoEstado) => {
   const consulta = 'UPDATE Multa SET estado = $1 WHERE multa_id = $2 RETURNING *';
     const resultado = await pool.query(consulta, [nuevoEstado, multaId]);

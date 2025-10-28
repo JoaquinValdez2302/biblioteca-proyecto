@@ -1,33 +1,40 @@
-// src/strategies/estrategiaSuspensionPorAtraso.js
-const socioRepository = require('../repositories/socioRepository'); // Suponiendo que exista un repo de socio
 
+const socioRepository = require('../repositories/socioRepository');
+
+// Implementa el patrón Strategy para la sanción por atraso.
 class EstrategiaSuspensionPorAtraso {
+    // Aplica la lógica de la suspensión.
     async aplicar(prestamo) {
-    const hoy = new Date();
-    const vencimiento = new Date(prestamo.fecha_vencimiento);
-    const diffTiempo = hoy.getTime() - vencimiento.getTime();
-    const diasDeAtraso = Math.floor(diffTiempo / (1000 * 3600 * 24));
+        const hoy = new Date();
+        const vencimiento = new Date(prestamo.fecha_vencimiento);
+        const diffTiempo = hoy.getTime() - vencimiento.getTime();
+        // Calcula cuántos días han pasado desde la fecha de vencimiento.
+        const diasDeAtraso = Math.floor(diffTiempo / (1000 * 3600 * 24));
 
-    if (diasDeAtraso <= 0) return null; // No hay sanción si no hay atraso
+        // Si no hay atraso, no se aplica ninguna sanción.
+        if (diasDeAtraso <= 0) return null;
 
-    let diasDeSuspension;
-    if (diasDeAtraso <= 7) {
-        diasDeSuspension = 7;
-    } else if (diasDeAtraso <= 15) {
-        diasDeSuspension = 15;
-    } else {
-        diasDeSuspension = 30;
-    }
+        // Determina la duración de la suspensión según la cantidad de días de atraso.
+        let diasDeSuspension;
+        if (diasDeAtraso <= 7) {
+            diasDeSuspension = 7;
+        } else if (diasDeAtraso <= 15) {
+            diasDeSuspension = 15;
+        } else {
+            diasDeSuspension = 30;
+        }
 
-    const fechaSancionHasta = new Date();
-    fechaSancionHasta.setDate(fechaSancionHasta.getDate() + diasDeSuspension);
+        // Calcula la fecha final de la sanción.
+        const fechaSancionHasta = new Date();
+        fechaSancionHasta.setDate(fechaSancionHasta.getDate() + diasDeSuspension);
 
-    console.log(`Aplicando suspensión al socio ${prestamo.socio_id} por ${diasDeSuspension} días.`);
-    // Aquí llamarías a una función del socioRepository para actualizar la fecha de sanción
-    await socioRepository.actualizarSancion(prestamo.socio_id, fechaSancionHasta);
+        // Delega la actualización de la sanción del socio al repositorio.
+        await socioRepository.actualizarSancion(prestamo.socio_id, fechaSancionHasta);
 
-    return { tipo: 'suspension', dias: diasDeSuspension, hasta: fechaSancionHasta };
+        // Devuelve un objeto que describe la sanción aplicada.
+        return { tipo: 'suspension', dias: diasDeSuspension, hasta: fechaSancionHasta };
     }
 }
 
+// Exporta una única instancia de la estrategia (patrón Singleton).
 module.exports = new EstrategiaSuspensionPorAtraso();

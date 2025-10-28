@@ -1,6 +1,10 @@
+
+
 const pool = require('../config/database');
 
-// La función ahora acepta la fecha de vencimiento como tercer parámetro
+/**
+ * Crea un nuevo registro de préstamo en la base de datos.
+ */
 const crear = async (socio_id, libro_id, fecha_vencimiento) => {
     const resultado = await pool.query(
     'INSERT INTO Prestamo (socio_id, libro_id, fecha_vencimiento) VALUES ($1, $2, $3) RETURNING *',
@@ -8,6 +12,10 @@ const crear = async (socio_id, libro_id, fecha_vencimiento) => {
     );
     return resultado.rows[0];
 };
+
+/**
+ * Obtiene todos los préstamos que aún no han sido devueltos.
+ */
 const obtenerVigentes = async (soloAtrasados = false) => {
     let consulta = `
         SELECT 
@@ -32,6 +40,9 @@ const obtenerVigentes = async (soloAtrasados = false) => {
         return resultado.rows;
 };
 
+/**
+ * Obtiene los préstamos vigentes cuya fecha de vencimiento es el día de hoy.
+ */
 const obtenerVencenHoy = async () => {
     const consulta = `
     SELECT l.titulo, s.nombre_completo
@@ -44,7 +55,9 @@ const obtenerVencenHoy = async () => {
     return resultado.rows;
 };
 
-// Obtiene las últimas 5 devoluciones
+/**
+ * Obtiene las últimas 5 devoluciones registradas en el sistema.
+ */
 const obtenerUltimasDevoluciones = async () => {
     const consulta = `
     SELECT l.titulo, s.nombre_completo, p.fecha_devolucion
@@ -59,11 +72,17 @@ const obtenerUltimasDevoluciones = async () => {
     return resultado.rows;
 };
 
+/**
+ * Busca un préstamo específico por su ID.
+ */
 const obtenerPorId = async (prestamoId) => {
   const resultado = await pool.query('SELECT * FROM Prestamo WHERE prestamo_id = $1', [prestamoId]);
   return resultado.rows[0];
 };
 
+/**
+ * Actualiza un préstamo para marcarlo como devuelto, estableciendo la fecha de devolución a la actual.
+ */
 const registrarDevolucion = async (prestamoId) => {
   const consulta = 'UPDATE Prestamo SET fecha_devolucion = NOW() WHERE prestamo_id = $1 RETURNING *';
   const resultado = await pool.query(consulta, [prestamoId]);

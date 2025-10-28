@@ -10,7 +10,7 @@
 }
 
 .paginationButton:hover {
-  background-color: #84b6f4;
+  background-color: #255791ff;
   color: white;
 }
 
@@ -51,10 +51,9 @@
   background-color: #C19A6B !important; /* Usamos !important para sobreescribir MUI */
   color: white !important;
   font-weight: bold !important;
-  text-transform: none !important; /* Evita que MUI ponga el texto en mayúsculas */
   border-radius: 4px !important;
   padding: 4px 10px !important; /* Ajustar tamaño */
-text-transform: uppercase !important;
+  text-transform: uppercase !important;
 }
 
 .actionButton:hover {

@@ -1,45 +1,43 @@
 // src/components/LoginForm.js
 "use client";
-import React, { useState } from 'react';
-import { TextField, Button, Box, Alert } from '@mui/material';
+import React, { useState } from "react";
+import { TextField, Button, Box, Alert } from "@mui/material";
 // Importamos useRouter para redirigir después del login
-import { useRouter } from 'next/navigation'; 
-import { useAuth } from '@/context/AuthContext';
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginForm() {
-  const [nombreUsuario, setNombreUsuario] = useState('');
-  const [contraseña, setContraseña] = useState('');
-  const [error, setError] = useState(''); // Para mostrar mensajes de error
+  const [nombreUsuario, setNombreUsuario] = useState("");
+  const [contraseña, setContraseña] = useState("");
+  const [error, setError] = useState(""); // Para mostrar mensajes de error
   const router = useRouter(); // Hook para la navegación
   const { login } = useAuth();
 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(''); // Limpiar errores previos
+    setError(""); // Limpiar errores previos
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
       const response = await fetch(`${apiUrl}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nombreUsuario, contraseña }),
-        credentials: 'include',
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.mensaje || 'Error al iniciar sesión');
+        throw new Error(data.mensaje || "Error al iniciar sesión");
       }
 
       // ¡Login exitoso!
-      console.log('Login exitoso:', data.usuario);
+      console.log("Login exitoso:", data.usuario);
       // Aquí podrías guardar la información del usuario en un estado global (Context, Zustand, Redux)
       // o simplemente redirigir.
       login(data.usuario);
-      router.push('/'); // Redirigir a la página principal
-
+      router.push("/"); // Redirigir a la página principal
     } catch (err) {
       setError(err.message);
     }
@@ -81,7 +79,14 @@ export default function LoginForm() {
         type="submit"
         fullWidth
         variant="contained"
-        sx={{ mt: 3, mb: 2 }}
+        sx={{
+          mt: 3,
+          mb: 2,
+          backgroundColor: "#84b6f4", // Tu color secundario
+          "&:hover": {
+            backgroundColor: "#255791ff", // Tono más oscuro para hover
+          },
+        }}
       >
         Ingresar
       </Button>

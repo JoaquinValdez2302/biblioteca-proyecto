@@ -224,8 +224,8 @@ export default function CatalogoLibros() {
       </TableContainer>
       {/* --- MODAL DE PRÉSTAMO --- */}
       <Dialog open={modalAbierto} onClose={() => setModalAbierto(false)}>
-        <DialogTitle>Registrar Préstamo</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="modalTitle">Registrar Préstamo</DialogTitle>
+        <DialogContent className="modalContent">
           <Typography variant="h6" gutterBottom>
             Libro: {libroSeleccionado?.titulo}
           </Typography>
@@ -242,8 +242,8 @@ export default function CatalogoLibros() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setModalAbierto(false)}>Cancelar</Button>
-          <Button onClick={handleConfirmarPrestamo}>Confirmar Préstamo</Button>
+          <Button onClick={() => setModalAbierto(false)} className="modalCancelButton">Cancelar</Button>
+          <Button onClick={handleConfirmarPrestamo} className="modalConfirmButton">Confirmar Préstamo</Button>
         </DialogActions>
       </Dialog>
       {/* ------------------------- */}

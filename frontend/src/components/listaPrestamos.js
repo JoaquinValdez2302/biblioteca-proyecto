@@ -187,8 +187,8 @@ export default function ListaPrestamos() {
         open={modalDevolucionAbierto}
         onClose={handleCerrarModalDevolucion}
       >
-        <DialogTitle>Registrar Devolución</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="modalTitle">Registrar Devolución</DialogTitle>
+        <DialogContent className="modalContent">
           <Typography>
             Estás registrando la devolución del libro:{" "}
             <strong>{prestamoSeleccionado?.libro_titulo}</strong>
@@ -223,8 +223,8 @@ export default function ListaPrestamos() {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCerrarModalDevolucion}>Cancelar</Button>
-          <Button onClick={handleConfirmarDevolucion} variant="contained">
+          <Button onClick={handleCerrarModalDevolucion} className = "modalCancelButton" >Cancelar</Button>
+          <Button onClick={handleConfirmarDevolucion} variant="contained" className="modalConfirmButton">
             Confirmar
           </Button>
         </DialogActions>

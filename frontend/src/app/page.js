@@ -135,14 +135,6 @@ export default function HomePage() {
           {/* Widget 4: Nuevos Libros */}
           <WidgetNuevosLibros onLibroAgregado={handleLibroAgregado} />
         </div>
-
-        <Typography variant="h4" gutterBottom>
-          ¡Bienvenido al Sistema de Gestión!
-        </Typography>
-        <Typography variant="body1">
-          Seleccioná una opción en la barra de navegación para comenzar.
-        </Typography>
-
         <Snackbar
           open={notificacion.abierto}
           autoHideDuration={6000}

@@ -1,0 +1,23 @@
+/* src/app/login/page.module.css */
+
+.loginContainer {
+  margin-top: 8vh; /* Más espacio arriba */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.loginCard {
+  background-color: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Ocupa el ancho del contenedor maxWidth="xs" */
+  border-top: 5px solid #d7c8b3; /* Borde superior con el color principal */
+}
+
+.loginTitle {
+  text-align: center;
+  margin-bottom: 24px !important;
+  color: #333;
+}

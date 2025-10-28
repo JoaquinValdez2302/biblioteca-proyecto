@@ -64,10 +64,10 @@ export default function FormularioNuevoSocio({ alAgregar, alCancelar }) {
         margin="normal"
       />
       <Box sx={{ mt: 2, display: "flex", justifyContent: "flex-end" }}>
-        <Button onClick={alCancelar} sx={{ mr: 1 }}>
+        <Button onClick={alCancelar} className="modalCancelButton">
           Cancelar
         </Button>
-        <Button type="submit" variant="contained">
+        <Button type="submit" variant="contained" className="modalConfirmButton">
           Agregar Socio
         </Button>
       </Box>

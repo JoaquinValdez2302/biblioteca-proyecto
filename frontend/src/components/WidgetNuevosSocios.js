@@ -51,7 +51,13 @@ export default function WidgetNuevosSocios({ onSocioAgregado }) {
       <Button
         variant="contained"
         onClick={() => setModalAbierto(true)}
-        sx={{ mb: 2 }}
+        sx={{
+          mb: 2,
+          backgroundColor: "#C19A6B", // Tu color secundario
+          "&:hover": {
+            backgroundColor: "#a5752b", // Tono más oscuro para hover
+          },
+        }}
       >
         Agregar Socio
       </Button>
@@ -79,8 +85,8 @@ export default function WidgetNuevosSocios({ onSocioAgregado }) {
 
       {/* El modal no necesita cambios de estilo */}
       <Dialog open={modalAbierto} onClose={() => setModalAbierto(false)}>
-        <DialogTitle>Agregar Nuevo Socio</DialogTitle>
-        <DialogContent>
+        <DialogTitle className="modalTitle">Agregar Nuevo Socio</DialogTitle>
+        <DialogContent className="modalContent">
           {/* --- ASEGURATE DE QUE ESTA LÍNEA ESTÉ AQUÍ --- */}
           <FormularioNuevoSocio
             alAgregar={handleSocioAgregadoLocal}

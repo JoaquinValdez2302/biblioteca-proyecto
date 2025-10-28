@@ -67,3 +67,5 @@ app.patch(
 app.listen(PORT, () => {
   console.log(`Backend escuchando en http://localhost:${PORT}`);
 });
+
+module.exports = app;

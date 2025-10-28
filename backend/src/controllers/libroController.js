@@ -4,11 +4,11 @@ const getLibros = async (req, res) => {
   try {
     const { busqueda, pagina } = req.query;
     // El controlador ahora solo habla con la fachada
-    const libros = await bibliotecaFacade.obtenerCatalogoDeLibros(
+    const resultado = await bibliotecaFacade.obtenerCatalogoDeLibros(
       busqueda,
       pagina
     );
-    res.json(libros);
+    res.json(resultado);
   } catch (error) {
     console.error("Error en el controlador de libros:", error);
     res.status(500).send("Error en el servidor");
@@ -20,12 +20,10 @@ const crearLibro = async (req, res) => {
     const { titulo, autor, isbn, precio } = req.body;
     // Basic validation: Check if required fields are present
     if (!titulo || !autor || !isbn || precio === undefined) {
-      return res
-        .status(400)
-        .json({
-          mensaje:
-            "Todos los campos (título, autor, isbn, precio) son requeridos",
-        });
+      return res.status(400).json({
+        mensaje:
+          "Todos los campos (título, autor, isbn, precio) son requeridos",
+      });
     }
     // Optional: Add more specific validation (e.g., price is a number, ISBN format)
 
@@ -47,11 +45,9 @@ const crearLibro = async (req, res) => {
     }
 
     // Send a generic error response to the client
-    res
-      .status(500)
-      .json({
-        mensaje: "Error interno del servidor al intentar crear el libro.",
-      });
+    res.status(500).json({
+      mensaje: "Error interno del servidor al intentar crear el libro.",
+    });
   }
 };
 
@@ -64,6 +60,7 @@ const getUltimosLibros = async (req, res) => {
     res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 };
+
 module.exports = {
   getLibros,
   crearLibro,

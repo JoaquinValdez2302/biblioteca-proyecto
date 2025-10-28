@@ -53,7 +53,7 @@ export default function CatalogoLibros() {
 
     fetch(url, { credentials: "include" })
       .then((response) => response.json())
-      .then((data) => setLibros(data))
+      .then((data) => setLibros(data.libros || []))
       .catch((error) => console.error("Error al obtener los libros:", error));
   }, [busqueda, pagina]); // <-- Se ejecuta de nuevo si 'busqueda' o 'pagina' cambian []); // El array vacío asegura que se ejecute solo una vez
   const handleAbrirModal = (libro) => {

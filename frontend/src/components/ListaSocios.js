@@ -13,7 +13,10 @@ export default function ListaSocios() {
   const itemsPorPagina = 10;
 
   useEffect(() => {
-    const url = new URL('http://localhost:3001/api/socios');
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+    // 2. Construir la URL completa usando apiUrl
+    const url = new URL(`${apiUrl}/api/socios`);
     url.searchParams.append('pagina', pagina);
     url.searchParams.append('porPagina', itemsPorPagina);
     if (busqueda) {
